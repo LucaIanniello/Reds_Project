@@ -24,7 +24,7 @@ REWARD_MODEL_PATH=${BASE_PATH}/reds_logdir
 
 XLA_PYTHON_CLIENT_PREALLOCATE=false CUDA_VISIBLE_DEVICES=${DEVICES} python -m bpref_v2.reward_learning.train_reds \
     --comment ${TASK_NAME}-phase0 \
-    --robot.data_dir ${BASE_PATH}/${TASK_TYPE}_data/${TASK_NAME} \
+    --robot.data_dir ${BASE_PATH}/${TASK_TYPE}_data/${TASK_TYPE}_data/${TASK_NAME} \
     --reds.embd_dim 512 \
     --reds.output_embd_dim 512 \
     --reds.n_layer 1 \
@@ -44,7 +44,7 @@ XLA_PYTHON_CLIENT_PREALLOCATE=false CUDA_VISIBLE_DEVICES=${DEVICES} python -m bp
     --reds.lambda_epic=1.0 \
     --reds.epic_on_neg_batch=True \
     --reds.supcon_on_neg_batch=True \
-    --use_failure=True \
+    --use_failure=False \
     --reds.transfer_type clip_vit_b16 \
     --augmentations "crop|jitter" \
     --robot.num_workers=2 \
@@ -54,7 +54,7 @@ XLA_PYTHON_CLIENT_PREALLOCATE=false CUDA_VISIBLE_DEVICES=${DEVICES} python -m bp
 
 for (( i = 1; ($i < $ITERATION); i++ )) 
 do 
-    XLA_PYTHON_CLIENT_PREALLOCATE=false LD_PRELOAD="" CUDA_VISIBLE_DEVICES=${DEVICES} python scripts/train_dreamer.py \
+    XLA_PYTHON_CLIENT_PREALLOCATE=false LD_PRELOAD="" CUDA_VISIBLE_DEVICES=${DEVICES} python REDS_agent/scripts/train_dreamer.py \
         --configs=${TASK_TYPE} reds_prior_rb \
         --logdir=${REPLAY_PATH}/${TASK_NAME}_ours_phase${i}_seed${SEED} \
         --task=${TASK_TYPE}_${TASK_NAME} \

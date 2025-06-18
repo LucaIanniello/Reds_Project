@@ -172,7 +172,7 @@ def load_model_vars(
             except ImportError as error:
                 logging.error(f"Could not import torch for CLIP checkpoint conversion: {error}")
             params = torch.jit.load(checkpoint_path_torch, map_location="cpu").state_dict()
-            params = jax.tree_map(lambda p: p.cpu().numpy(), params)
+            params = jax.tree_util.tree_map(lambda p: p.cpu().numpy(), params)
 
             # Save converted checkpoint
             with gfile.GFile(checkpoint_path, "wb") as f:
@@ -446,7 +446,7 @@ def load_liv_vision_model():
     home = os.path.join(os.path.expanduser("~"), ".liv")
     modelpath = os.path.join(home, modelid, "model.pt")
     liv_state_dict = torch.load(modelpath, map_location="cpu")["liv"]
-    liv_params = jax.tree_map(lambda p: p.cpu().numpy(), liv_state_dict)
+    liv_params = jax.tree_util.tree_map(lambda p: p.cpu().numpy(), liv_state_dict)
 
     from bpref_v2.third_party.openai.model import _convert_vars, resnet_50
 
@@ -464,7 +464,7 @@ def load_liv_model():
     home = os.path.join(os.path.expanduser("~"), ".liv")
     modelpath = os.path.join(home, modelid, "model.pt")
     liv_state_dict = torch.load(modelpath, map_location="cpu")["liv"]
-    liv_params = jax.tree_map(lambda p: p.cpu().numpy(), liv_state_dict)
+    liv_params = jax.tree_util.tree_map(lambda p: p.cpu().numpy(), liv_state_dict)
 
     from bpref_v2.third_party.openai.model import _convert_vars, resnet_50
 

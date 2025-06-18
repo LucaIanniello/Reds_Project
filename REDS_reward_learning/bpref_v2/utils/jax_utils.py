@@ -214,4 +214,4 @@ def sync_state_fn(state):
     def select(x):
         return jax.lax.psum(jnp.where(i == 0, x, jnp.zeros_like(x)), "pmap")
 
-    return jax.tree_map(select, state)
+    return jax.tree_util.tree_map(select, state)

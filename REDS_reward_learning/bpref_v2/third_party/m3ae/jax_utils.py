@@ -83,10 +83,10 @@ def cross_entropy_loss(logits, labels, smoothing_factor=0.0):
 
 
 def accumulated_gradient(state, accumulated_grads, accumulated_steps, grads, apply_steps, apply_fn=None):
-    accumulated_grads = jax.tree_map(
+    accumulated_grads = jax.tree_util.tree_map(
         lambda x, y: x + y,
         accumulated_grads,
-        jax.tree_map(lambda x: x / float(apply_steps), grads),
+        jax.tree_util.tree_map(lambda x: x / float(apply_steps), grads),
     )
     accumulated_steps = (accumulated_steps + 1) % apply_steps
     if apply_fn is None:
@@ -98,7 +98,7 @@ def accumulated_gradient(state, accumulated_grads, accumulated_steps, grads, app
     )
     accumulated_grads = jax.lax.cond(
         accumulated_steps == 0,
-        lambda: jax.tree_map(jnp.zeros_like, accumulated_grads),
+        lambda: jax.tree_util.tree_map(jnp.zeros_like, accumulated_grads),
         lambda: accumulated_grads,
     )
     return state, accumulated_grads, accumulated_steps
@@ -111,7 +111,7 @@ def sync_state_across_devices(state):
     def select(x):
         return jax.lax.psum(jnp.where(i == 0, x, jnp.zeros_like(x)), "pmap")
 
-    return jax.tree_map(select, state)
+    return jax.tree_util.tree_map(select, state)
 
 
 def get_random_bounding_box(

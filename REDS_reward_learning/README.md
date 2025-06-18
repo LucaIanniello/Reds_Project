@@ -24,9 +24,9 @@ If you want to train reward model for each phase separately, you can use the fol
 ```python
 # REDS (initial training, only with expert demonstrations)
 CUDA_VISIBLE_DEVICES=0 XLA_PYTHON_CLIENT_PREALLOCATE=false python -m bpref_v2.reward_learning.train_reds \
-    --comment={experiment_name} \
-    --robot.data_dir={input_data_path} \
-    --logging.output_dir={output_path} \
+    --comment={"test_reds"} \
+    --robot.data_dir={"/home/lianniello/Reds_Project/metaworld_data/metaworld_data/drawer-open"} \
+    --logging.output_dir={"/home/lianniello/Reds_Project/results/"} \
     --batch_size=32 \
     --model_type=REDS \
     --early_stop=False \
@@ -35,10 +35,10 @@ CUDA_VISIBLE_DEVICES=0 XLA_PYTHON_CLIENT_PREALLOCATE=false python -m bpref_v2.re
     --save_period=1000 \
     --train_steps=5000 \
     --eval_steps=10 \
-    --robot.task_name={task_name} \
-    --robot.num_demos={number of demos, to use all demos in the folder, use -1} \
-    --robot.benchmark={metaworld|rlbench} \
-    --env={metaworld|rlbench_{task_name}} \
+    --robot.task_name={"drawer-open"} \
+    --robot.num_demos={2} \
+    --robot.benchmark={metaworld} \
+    --env={metaworld_{"drawer_open"}} \
     --robot.window_size=4 \
     --robot.skip_frame=1 \
     --reds.lambda_supcon=1.0 \
